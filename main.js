@@ -132,27 +132,43 @@ contactForm.addEventListener('submit', e => {
 /* Animated Job Roles */
 const roles = [
   "Data Analyst",
-  "AI Builder",
+  "AI Enginner",
   "Business Consultant",
-  "Content Creator"
+  "Data Scientist"
 ];
 
 const roleElement = document.getElementById("animatedRole");
 
 let roleIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
 
-setInterval(() => {
-  roleElement.style.opacity = "0";
-  roleElement.style.transform = "translateY(10px)";
+function typeEffect() {
+  const currentRole = roles[roleIndex];
 
-  setTimeout(() => {
-    roleIndex = (roleIndex + 1) % roles.length;
-    roleElement.textContent = roles[roleIndex];
+  if (!isDeleting) {
+    roleElement.textContent = currentRole.substring(0, charIndex + 1);
+    charIndex++;
 
-    roleElement.style.opacity = "1";
-    roleElement.style.transform = "translateY(0)";
-  }, 300);
-}, 2500);
+    if (charIndex === currentRole.length) {
+      isDeleting = true;
+      setTimeout(typeEffect, 1500); // Pause after typing
+      return;
+    }
+  } else {
+    roleElement.textContent = currentRole.substring(0, charIndex - 1);
+    charIndex--;
+
+    if (charIndex === 0) {
+      isDeleting = false;
+      roleIndex = (roleIndex + 1) % roles.length;
+    }
+  }
+
+  setTimeout(typeEffect, isDeleting ? 50 : 100);
+}
+
+typeEffect();
 // Initialize EmailJS (make sure this runs after emailjs script is loaded)
 document.addEventListener("DOMContentLoaded", () => {
     emailjs.init("1bo163HycOIpcJ-Oq");
